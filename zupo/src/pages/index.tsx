@@ -13,7 +13,7 @@ export default function Home() {
   useEffect(() => {
     // If the user is authenticated, redirect to the dashboard page
     if (status === "authenticated") {
-      router.push("/dashboard");
+      router.push("/test");
     }
   }, [status, router]);
 

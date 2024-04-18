@@ -7,7 +7,7 @@ const Dashboard = () => {
       <div className="relative mt-40 h-[580px] w-[1200px] rounded-[20px] bg-red-500">
         <div className="absolute left-0 top-0 h-full w-3/4 p-8">
           <div>
-            <div className=" absolute left-20 top-[60px] h-[200px] w-[500px] bg-orange-300 font-[Montserrat] text-5xl font-bold leading-[3.5rem] ">
+            <div className=" absolute left-20 top-[60px] h-[200px] w-[500px] bg-orange-300 font-[Montserrat] text-5xl font-bold leading-[3rem] ">
               <span>Shape Our AI Driven</span>
               <br /> Knowledge Base: <br></br>
               <span className="text-green-600">
