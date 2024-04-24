@@ -25,3 +25,14 @@ export const questionRouter = createTRPCRouter({
     });
   }),
 });
+
+export const sessionRouter = createTRPCRouter({
+  getAllSessionData: protectedProcedure.query(async ({ ctx }) => {
+    const sessionData = await ctx.db.session.findMany({
+      orderBy: {
+        expires: "asc",
+      },
+    });
+    return sessionData;
+  }),
+});

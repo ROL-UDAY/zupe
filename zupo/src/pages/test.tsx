@@ -2,43 +2,63 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { z } from "zod";
 import { api } from "~/utils/api";
-import { getServerAuthSession } from "~/server/auth";
-import { GetServerSidePropsContext } from "next";
+import { useSession } from "next-auth/react";
+import Header from "~/components/Header";
+
+// import { getServerAuthSession } from "~/server/auth";
+// import { GetServerSidePropsContext } from "next";
+
+// Main Test
 
 export const questionSchema = z.object({
   question: z.string(),
   frequency: z.string(),
 });
 
+// const hello = api.post.hello.useQuery()
+
 const Test = () => {
   const [submitted, setSubmitted] = useState(false);
-  const [submissionData, setSubmissionData] = useState<
-    z.infer<typeof questionSchema>
-  >({
+  const [formData, setFormdata] = useState<z.infer<typeof questionSchema>>({
     question: "",
     frequency: "One Time",
   });
 
-  function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
-    setSubmissionData({
-      ...submissionData,
-      [e.target.name]: e.target.value,
-    });
-  }
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormdata((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
-  function handleSelect(e: React.ChangeEvent<HTMLSelectElement>) {
-    setSubmissionData({
-      ...submissionData,
-      frequency: e.target.value,
-    });
-  }
+  const handleDropdown = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { value } = e.target;
+    setFormdata((prevData) => ({
+      ...prevData,
+      frequency: value,
+    }));
+  };
 
-  const { data, refetch } = api.questions.getContributionCount.useQuery();
+  const handleClick = () => {
+    mutate(formData);
+  };
 
-  const { mutate, isPending } = api.questions.create.useMutation({
+  // Session Data
+  const { data: userData } = api.session.getAllSessionData.useQuery();
+  console.log({ userData });
+
+  // user data
+  const { data: sessionData } = useSession();
+  console.log("this is", sessionData?.user.name);
+
+  const { data: counter, refetch } =
+    api.questions.getContributionCount.useQuery();
+
+  const { mutate } = api.questions.create.useMutation({
     onSuccess: async () => {
       await refetch();
-      setSubmissionData({
+      setFormdata({
         question: "",
         frequency: "One Time",
       });
@@ -49,11 +69,11 @@ const Test = () => {
   return (
     <div className="flex h-screen w-full flex-col items-center sm:bg-white xs:bg-white">
       {/* Header */}
-      <div className="header flex w-full max-w-[1100px] items-center justify-between px-4 py-4 sm:mb-12 sm:mt-12 sm:px-12 xs:mt-4">
-        <div>
-          <Image src="/EVLogo.png" alt="Logo" width={130} height={100} />
-        </div>
-        <p className="text-black">{data ?? 0}</p>
+      <div className=" w-full max-w-[1100px] items-center justify-between">
+        <Header
+          counterData={counter ?? 0}
+          session={sessionData?.user.name ?? undefined}
+        />
       </div>
       {/* Header */}
       {/* Main Content */}
@@ -114,7 +134,7 @@ const Test = () => {
                   id="questionTextArea"
                   className="block h-32 w-full resize-none rounded-[8px] border border-gray-300 bg-gray-100 px-3 py-4 font-montserrat"
                   placeholder="Are there any compatibility issues between EV chargers and electric cars?"
-                  value={submissionData.question}
+                  value={formData.question}
                   onChange={handleChange}
                 ></textarea>
               </div>
@@ -132,8 +152,8 @@ const Test = () => {
                 <select
                   id="questionFrequency"
                   className="h-[38px] rounded-[8px] border border-gray-300 bg-gray-100 px-3 text-left font-montserrat sm:w-[250px] xs:w-[290px]"
-                  value={submissionData.frequency}
-                  onChange={handleSelect}
+                  value={formData.frequency}
+                  onChange={handleDropdown}
                 >
                   <option value="daily">Daily</option>
                   <option value="weekly">Weekly</option>
@@ -147,7 +167,7 @@ const Test = () => {
               <div className="">
                 <button
                   className="sm-w-[250px] h-[40px] rounded-[8px] bg-[#74AF28] px-4 py-2 font-montserrat text-white hover:bg-orange-600 xs:w-[290px]"
-                  onClick={() => mutate(submissionData)}
+                  onClick={handleClick}
                 >
                   Submit Your Question Now!
                 </button>
