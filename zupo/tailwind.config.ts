@@ -23,6 +23,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
+        montserrat: ["Montserrat"],
       },
       screens: {
         xs: { min: "320px", max: "566px" },

@@ -3,6 +3,7 @@
 
 generator client {
     provider = "prisma-client-js"
+    previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
@@ -11,7 +12,7 @@ datasource db {
     // Further reading:
     // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
     // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url      = env("DATABASE_URL")
+    url      = "file:./dev.db"
 }
 
 model Post {
@@ -64,6 +65,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     posts         Post[]
+    Questions      Questions[]
 }
 
 model VerificationToken {
@@ -72,4 +74,16 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+
+model Questions {
+    id        Int      @id @default(autoincrement())
+    question  String
+    frequency String
+    answer    String?
+    userId    String
+    user      User     @relation(fields: [userId], references: [id])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
