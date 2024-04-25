@@ -2,7 +2,6 @@ import { useSession, signIn } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import robotImage from "../../public/Doodle.png";
 
 export default function Home() {
   const { data: sessionData, status } = useSession();
@@ -39,7 +38,7 @@ export default function Home() {
           {!sessionData && (
             <div className="relative">
               <Image
-                src={robotImage}
+                src="/Hero.png"
                 alt="Robot Image"
                 width={400}
                 height={400}

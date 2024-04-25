@@ -16,7 +16,7 @@ const Header: React.FC<HeaderProps> = ({ session, questionCountByUser }) => {
   const formattedSession = formatSessionName(session);
   return (
     <div>
-      <div className="header flex w-full items-center justify-between py-1 sm:mb-12 sm:mt-12 sm:px-1 xs:mt-4 xs:px-1">
+      <div className="header flex w-full items-center justify-between py-1 sm:mb-12 sm:mt-12 sm:px-1 xs:mb-2 xs:mt-6 xs:px-1">
         <div>
           <Image src="/EVLogo.png" alt="Logo" width={130} height={100} />
         </div>

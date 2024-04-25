@@ -7,7 +7,7 @@ import Header from "~/components/Header";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/router";
-import Content from "~/components/Content";
+// import Content from "~/components/Content";
 import type { z } from "zod";
 
 const Test = () => {
@@ -54,20 +54,23 @@ const Test = () => {
     }
   };
 
-  // Session Data
+  // Session Record
   const { data: userData } = api.session.getAllSessionData.useQuery();
   console.log({ userData });
 
   // user data
-  const { data: sessionData } = useSession();
-  console.log("this is", sessionData?.user.name);
+  const { data: sessionData, status } = useSession();
+  console.log("this is", sessionData);
+  console.log("this is", status);
   //
 
   // Check if the session has expired
   useEffect(() => {
     const isSessionExpired =
       sessionData?.expires && new Date() > new Date(sessionData.expires);
-    if (isSessionExpired) {
+    if (!sessionData?.user) {
+      // void router.push("/"); // Redirect to root page if user is not authenticated
+    } else if (isSessionExpired) {
       void router.push("/");
     }
   }, [sessionData, router]);
@@ -98,38 +101,58 @@ const Test = () => {
         <ToastContainer
           toastStyle={{
             backgroundColor: "black",
-            color: "#ffffff",
-            fontSize: "16px",
+            color: "white",
           }}
         />
-        <div className="relative mx-auto mt-0 max-w-[1200px] rounded-[32px] p-4 sm:bg-[#E8F7D0] xs:mb-10 xs:grid xs:grid-cols-1 xs:gap-6 xs:bg-white  xs:p-0 xs:pb-10 xs:pl-4 xs:pr-4">
-          <div className="h-[700px] w-full max-w-[500px] sm:absolute sm:right-10 sm:top-[70%] lg:top-12 xs:sticky xs:top-2 xs:h-[500px] xs:max-w-[440px] xs:rounded-3xl xs:shadow-lg">
+        <div className="relative mx-auto mt-0 max-w-[1200px] rounded-[32px] p-4 sm:bg-[#E8F7D0] xs:mb-10 xs:grid xs:grid-cols-1 xs:gap-6 xs:bg-white xs:p-0 xs:pb-10 xs:pl-4 xs:pr-4">
+          <div className="h-[700px] w-full max-w-[500px] sm:absolute sm:right-10 sm:top-[70%] lg:top-12 xs:sticky xs:top-2 xs:h-[500px] xs:max-w-[440px] xs:rounded-3xl ">
             <div className="">
               <Image
                 src="/Hero.png"
                 alt="Doodle"
                 width={600}
                 height={400}
-                className="relative xs:h-[500px] xs:w-full xs:rounded-3xl"
+                className=" sm:h-[650px] sm:rounded-3xl xs:h-[500px] xs:w-full xs:rounded-3xl"
               />
             </div>
           </div>
-          <div className=" flex h-[580px] flex-col overflow-auto p-8 xs:sticky xs:top-[20%] xs:h-[450px] xs:items-center xs:rounded-3xl xs:bg-[#E8F7D0] xs:shadow-lg">
-            <Content />
+          <div className=" flex h-[580px] flex-col overflow-auto p-8 xs:sticky xs:top-[20%] xs:h-[450px] xs:items-center xs:rounded-3xl xs:bg-[#E8F7D0] ">
+            <div>
+              <div className="text-wrap font-montserrat text-5xl font-bold leading-[3.5rem] text-[#334C1B] sm:mb-6 xs:max-w-[400px] xs:items-center xs:text-3xl">
+                <span>Shape Our AI Driven </span>
+                <br /> Knowledge Base: <br></br>
+                <span className="text-[#74AF28] xs:text-3xl">
+                  Your Questions <br></br> Matter!
+                </span>
+              </div>
+              <div className="max-w-[480px] text-wrap font-montserrat text-[16px] font-medium text-[#334C1B] xs:mt-5 xs:items-center xs:text-sm">
+                <div className="">
+                  <p>
+                    Help us build the ultimate resource hub by submitting your
+                    questions. Your input will train our AI to provide accurate
+                    and helpful responses across all departments.
+                  </p>
+                </div>
+                <p className=" mt-5 ">
+                  Don`t hesitate—add your queries as they arise and be a driving
+                  force behind our smarter, more efficient knowledge base!
+                </p>
+              </div>
+            </div>
           </div>
-          <div className="xs:rounded-fill :top-[82%] flex h-[365px] w-[486px] flex-col flex-wrap items-center rounded-[32px] bg-black shadow-lg sm:absolute sm:left-[4%] sm:top-[82%] sm:pb-10 sm:pt-10 xs:sticky xs:mx-auto xs:h-[380px] xs:w-full xs:pt-10 xs:shadow-none">
-            <div className="w-[382px] xs:w-[290px]">
+          <div className="xs:rounded-fill top-[82%] flex h-[400px] w-[486px] flex-col flex-wrap items-center justify-center rounded-[32px] bg-black shadow-lg sm:absolute sm:left-[4%] sm:top-[82%] sm:pb-10 sm:pt-10 xs:sticky xs:mx-auto xs:h-[400px] xs:w-full ">
+            <div className="w-[382px] xs:w-[85%]">
               <div className="pb-4">
                 <label
                   htmlFor="questionTextArea"
-                  className="block font-montserrat text-base font-medium text-white"
+                  className="font-small block font-montserrat text-base text-white"
                 >
                   Add your questions here:
                 </label>
                 <textarea
                   name="question"
                   id="questionTextArea"
-                  className="block h-32 w-full resize-none rounded-[8px] border border-gray-300 bg-gray-100 px-3 py-4 font-montserrat"
+                  className=" h-32 w-full rounded-[8px] border border-gray-300 bg-gray-100 px-3 py-4 font-montserrat"
                   placeholder="Are there any compatibility issues between EV chargers and electric cars?"
                   value={formData.question}
                   onChange={handleChange}
@@ -138,7 +161,7 @@ const Test = () => {
               <div className="pb-4">
                 <label
                   htmlFor="questionFrequency"
-                  className="mr-30 block font-montserrat text-base font-medium text-white "
+                  className="mr-30 font-small block font-montserrat text-base text-white "
                 >
                   Question Frequency:
                 </label>
