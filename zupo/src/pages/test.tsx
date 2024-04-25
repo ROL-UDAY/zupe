@@ -7,6 +7,7 @@ import Header from "~/components/Header";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/router";
+
 // import Content from "~/components/Content";
 import type { z } from "zod";
 
@@ -69,7 +70,7 @@ const Test = () => {
     const isSessionExpired =
       sessionData?.expires && new Date() > new Date(sessionData.expires);
     if (!sessionData?.user) {
-      // void router.push("/"); // Redirect to root page if user is not authenticated
+      void router.push("/"); // Redirect to root page if user is not authenticated
     } else if (isSessionExpired) {
       void router.push("/");
     }
@@ -141,7 +142,7 @@ const Test = () => {
             </div>
           </div>
           <div className="xs:rounded-fill top-[82%] flex h-[400px] w-[486px] flex-col flex-wrap items-center justify-center rounded-[32px] bg-black shadow-lg sm:absolute sm:left-[4%] sm:top-[82%] sm:pb-10 sm:pt-10 xs:sticky xs:mx-auto xs:h-[400px] xs:w-full ">
-            <div className="w-[382px] xs:w-[85%]">
+            <div className="w-[382px] xs:w-[82%]">
               <div className="pb-4">
                 <label
                   htmlFor="questionTextArea"
