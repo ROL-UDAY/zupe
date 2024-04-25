@@ -1,6 +1,10 @@
-import { questionSchema } from "~/pages/test";
-
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { z } from "zod";
+
+export const questionSchema = z.object({
+  question: z.string(),
+  frequency: z.string(),
+});
 
 export const questionRouter = createTRPCRouter({
   create: protectedProcedure
@@ -17,12 +21,15 @@ export const questionRouter = createTRPCRouter({
       });
     }),
 
-  getContributionCount: protectedProcedure.query(async ({ ctx }) => {
-    return ctx.db.questions.count({
+  getQuestionCountByUser: protectedProcedure.query(async ({ ctx }) => {
+    const userId = ctx.session.user.id;
+    const questionCount = await ctx.db.questions.count({
       where: {
-        userId: ctx.session.user.id,
+        userId,
       },
     });
+
+    return questionCount;
   }),
 });
 
@@ -35,4 +42,15 @@ export const sessionRouter = createTRPCRouter({
     });
     return sessionData;
   }),
+});
+
+getQuestionCountByUser: protectedProcedure.query(async ({ ctx }) => {
+  const userId = ctx.session.user.id;
+  const questionCount = await ctx.db.questions.count({
+    where: {
+      userId,
+    },
+  });
+
+  return questionCount;
 });
