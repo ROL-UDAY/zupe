@@ -45,6 +45,7 @@ export const questionRouter = createTRPCRouter({
   }),
 });
 
+// Testing purposes only
 export const sessionRouter = createTRPCRouter({
   getAllSessionData: protectedProcedure.query(async ({ ctx }) => {
     const sessionData = await ctx.db.session.findMany({
